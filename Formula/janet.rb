@@ -17,6 +17,11 @@ class Janet < Formula
 
   depends_on "meson" => :build
   depends_on "ninja" => :build
+  
+  respource "jpm" do
+    url "https://github.com/janet-lang/jpm/archive/refs/tags/v1.0.0.tar.gz"
+    sha256 "858d4ef2f6ac78222c53154dd91f8fb5994e3c3cbe253c9b0d3b9d52557eeb9b"
+  end
 
   def install
     system "meson", "setup", "build", *std_meson_args
@@ -24,6 +29,11 @@ class Janet < Formula
       system "ninja"
       system "ninja", "install"
     end
+    ENV.prepend_path "PATH", bin
+    bootstrap = buildpath/"jpm_bootstrap"
+    bootstrap.install resource("jpm")
+    cd bootstrap
+    system "PREFIX=#{libexec}", "janet", "bootstrap.janet"
   end
 
   test do
