@@ -35,14 +35,6 @@ class Janet < Formula
     cd bootstrap
     system "PREFIX=#{libexec}", "janet", "bootstrap.janet"
   end
-  
-  def post_install
-    system "git", "clone", "https://github.com/janet-lang/jpm"
-    system "cd" "jpm"
-    system "PREFIX=" + HOMEBREW_PREFIX, "janet", "bootstrap.janet"
-    system "cd .."
-    rm_rf "jpm"
-  end
 
   test do
     assert_equal "12", shell_output("#{bin}/janet -e '(print (+ 5 7))'").strip
